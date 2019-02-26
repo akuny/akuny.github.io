@@ -1,0 +1,34 @@
+name: andy kuny
+description: >
+  andy kuny
+about: >
+  The personal website of Andy Kuny.
+
+master_repo: false
+url: 'https://www.andykuny.com'
+markdown: kramdown
+highlighter: rouge
+
+plugins: ['jekyll-paginate', 'jekyll-gist', 'jekyll-feed']
+
+paginate: 4
+
+logo:
+disqus_shortname:
+
+rtl: false
+owner:
+  name: Andy Kuny
+  avatar:
+  email:
+  # Social networking links used in footer. Update and remove as you like.
+  twitter:
+  github: https://github.com/akuny
+  stackexchange:
+  linkedin: https://www.linkedin.com/in/andy-kuny
+
+# Analytics and webmaster tools stuff goes here
+google_analytics:
+google_verify:
+# https://ssl.bing.com/webmaster/configure/verify/ownership Option 2 content= goes here
+bing_verify:
