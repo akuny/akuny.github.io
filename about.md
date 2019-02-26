@@ -3,11 +3,13 @@ layout: default
 title: about
 ---
 
-## about
-
 <!-- <img class="user-avatar" src="{{ site.owner.avatar }}"> -->
 
 Here's some intersting stuff about me.
+
+## colophon
+
+This site was built with Jekyll and the [White Paper theme](https://github.com/vinitkumar/white-paper).
 
 <div class="pagination">
   {% if site.owner.linkedin %}
