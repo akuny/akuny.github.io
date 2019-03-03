@@ -1,9 +1,9 @@
 ---
 layout: post
-title: 'Forming Big Opinions'
-date: 2018-03-03 23:07:02 +0530
+title: 'Big Opinions'
+date: 2018-03-05 23:07:02 +0530
 comments: false
-excerpt: 'How to make architectural decisions by accident.'
+excerpt: 'Making architectural decisions by accident.'
 categories:
 ---
 
@@ -11,15 +11,15 @@ categories:
 
 _Bob Ross_
 
-Once upon a time, a teammate and I were tasked with building a backend API in Node.js.
-My knowledge of Node.js was limited at best: it was JavaScript on the server, right? And
-asynchronous by nature?
+Once upon a time, a teammate and I were tasked with building a backend API using
+[Node.js](https://nodejs.org/). My knowledge of Node.js was limited at best: it was
+JavaScript on the server, right? And asynchronous?
 
-The situation called for a "batteries included" framework, something akin Rails or Laravel
-that could get us up and running quickly. Given its popularity, I looked into Express as a
-potential solution.
+The situation called for a "batteries included" framework, something akin to Rails
+that could get us up and running quickly. Given its popularity, [Express](https://expressjs.com/)
+was one of the first frameworks I looked into.
 
-Here are some choice quotations from the [Express FAQ](https://expressjs.com/en/starter/faq.html):
+Here are some quotations from the [Express FAQ](https://expressjs.com/en/starter/faq.html):
 
 > _How should I structure my application?_
 >
@@ -41,13 +41,11 @@ Oh.
 
 Oh no.
 
-Express was not the answer: it was so damn **unopinionated**. Lacking even the faintest
-clue as to how to structure a product using the specified technology, I needed opinions
-more so than anything.
+Lacking a basic understanding of how one would structure a product using the specified
+technology, I needed opinions more so than anything. Suffice to say the product was
+not built with Express.
 
-Suffice to say the product was not built with Express.
-
-## express from the ground up
+## from hello world to hell no
 
 Here's the standard Express "Hello World" example:
 
@@ -71,7 +69,7 @@ Here, we:
 3. Add a `GET` route
 4. Start the application on port 3000
 
-Simple enough. Let's move on to a more functional example of a route in Express. 
+Let's move on to a more functional example of a route in Express.
 Here's a `POST` route for a notional notekeeping application:
 
 ```javascript
@@ -81,4 +79,4 @@ app.post('/note', function(req, res) {
 });
 ```
 
-Yikes. Here, the anonymous callback function is doing quite a bit. 
+Here, the anonymous callback function does quite a bit.

@@ -11,7 +11,7 @@ highlighter: rouge
 
 plugins: ['jekyll-paginate', 'jekyll-gist', 'jekyll-feed']
 
-paginate: 4
+paginate: 5
 
 logo:
 disqus_shortname:
@@ -20,7 +20,7 @@ rtl: false
 owner:
   name: Andy Kuny
   avatar:
-  email:
+  email: hi@andykuny.com
   # Social networking links used in footer. Update and remove as you like.
   twitter:
   github: https://github.com/akuny
