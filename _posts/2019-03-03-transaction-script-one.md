@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 'Domain Logic in Express: Part 1'
-date: 2018-03-03 23:07:02 +0530
+date: 2019-03-04 23:07:02 +0530
 comments: false
 excerpt: 'The seductive simplicity of the Transaction Script'
 category: software

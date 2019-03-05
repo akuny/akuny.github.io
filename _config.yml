@@ -1,8 +1,10 @@
 name: andy kuny
+title: andy kuny
 description: >
-  andy kuny
+  Another wretched blog.
 about: >
   The personal website of Andy Kuny.
+author: Andy Kuny
 
 master_repo: false
 url: 'https://www.andykuny.com'
