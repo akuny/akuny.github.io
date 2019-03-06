@@ -23,13 +23,15 @@ app.post('/widget/make', (req, res) => {
   const widget = req.body;
   validator.check(widget, (err, validatedWidget) => {
     if (err) {
-      res.status(500).send({ error: 'Validation failed', message: err });
+      return res.status(500).send({ error: 'Validation failed', message: err });
     }
     database.saveWidget(validatedWidget, (err, savedWidget) => {
       if (err) {
-        res.status(500).send({ error: 'Database access failed', message: err });
+        return res
+          .status(500)
+          .send({ error: 'Database access failed', message: err });
       }
-      res.status(200).send(savedWidget);
+      return res.status(200).send(savedWidget);
     });
   });
 });
