@@ -8,7 +8,7 @@ category: software
 tags: [express, architecture, design]
 ---
 
-When creating a new Express application, I tend to jam as much logic as I can
+When creating a new [Express](https://expressjs.com/) application, I tend to jam as much logic as I can
 in the anonymous callback that [`app.METHOD()`](https://expressjs.com/en/4x/api.html#app.METHOD)
 takes as its second argument. It's easy to reason with: here's
 everything that happens in response to a given HTTP request in one location.
