@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 'Domain Logic in Express: Part 2'
-date: 2019-03-11 23:07:02 +0530
+date: 2019-03-12 23:07:02 +0530
 comments: false
 excerpt: 'Transaction Script''s pitfalls'
 category: software
@@ -14,7 +14,7 @@ we'll need a better example than the non-existent widget management app discusse
 
 ## Phase One
 
-Wormwood is a job board that lets organizations submit job postings.
+JobFair is a job board that lets organizations submit job postings.
 Job seekers can read these job postings and click a link to submit an
 application on the organization's website.
 
@@ -31,12 +31,12 @@ delete job postings:
 | PUT    | /job-posting/:id | Update a particular job posting |
 | DELETE | /job-posting/:id | Delete a particular job posting |
 
-So, Wormwood allows users who are associated with an organization
+So, JobFair allows users who are associated with an organization
 to submit and update job postings; users who are not associated with
 an organization can only view these job postings. Organizations pay
-$50 a month for their users to post jobs on Wormwood.
+$50 a month for their users to post jobs on JobFair.
 
-Given the modest feature set, the first version of Wormwood's backend
+Given the modest feature set, the first version of JobFair's backend
 handles job posting use cases with the Transaction Script pattern.
 Here's the initial implementation of the `POST /job-posting` endpoint:
 
@@ -71,13 +71,13 @@ job posting back to the client.
 
 You can look at the rest of the code for this initial implementation in the
 `app/transaction-script-phase-one` file in the
-[Wormwood repository on GitHub](https://github.com/akuny/express-domain-logic).
+[JobFair repository on GitHub](https://github.com/akuny/express-domain-logic).
 It's straightforward: the backend doesn't need to do anything apart from
 validate `POST` and `PUT` request payloads and perform simple CRUD operations.
 
 ## Phase Two
 
-Wormwood has been up and running for a few months, and leadership has
+JobFair has been up and running for a few months, and leadership has
 an exciting idea: what if some organizations could opt into a "Gold"
 tier that allowed them to select three featured job postings a month to be
 displayed on a splashy UI that users would see upon logging in? For
@@ -144,7 +144,27 @@ app.post('/job-posting', (req, res) => {
 
 Well, at least it works, for now. I know this routine is monsterous beyond
 reason, but it's the best I could come up with after a long day, which may
-make it a more plausible example of something implemented in a rush.
+make it a more plausible example of something implemented in a rush. It assumes
+data received from the client will be JSON structured as such:
+
+```json
+{
+  "id": 999,
+  "title": "VP of Minions",
+  "company": "Dynamic Systems Incorporated",
+  "description": "Let the games begin",
+  "contact": "boss@example.com",
+  "organization": {
+    "type": "gold",
+    "featuredRemaining": true
+  }
+}
+```
+
+We're assuming that the client sends the server information about the organization
+at hand; otherwise, the `countFeaturedPosts` routine we've jammed into the
+`validator` module would need to access the database, makign it dependent on
+the `database-gateway` module.
 
 A few months later, another turn of the screw: now leadership wants a Silver
 and a Platinum tier. The Silver tier offers participants one featured post a
