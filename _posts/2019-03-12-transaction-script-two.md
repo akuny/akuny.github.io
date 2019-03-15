@@ -101,7 +101,10 @@ app.post('/job-posting', (req, res) => {
     if (err) {
       return res.status(500).send({ error: 'validation error', message: err });
     }
-    if (validatedJobPosting.organization.type === 'gold') {
+    if (
+      validatedJobPosting.organization.type === 'gold' &&
+      validatedJobPosting.isFeatured
+    ) {
       validator.countFeaturedPosts(
         validatedJobPosting,
         (err, featuredAvailable, validatedJobPosting) => {
@@ -157,9 +160,10 @@ will be structured as such:
   "company": "Dynamic Systems Incorporated",
   "description": "Let the games begin",
   "contact": "boss@example.com",
+  "isFeatured": true,
   "organization": {
     "type": "gold",
-    "featuredRemaining": true
+    "featuredRemaining": 2
   }
 }
 ```
