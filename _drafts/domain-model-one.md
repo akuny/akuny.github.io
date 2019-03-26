@@ -9,15 +9,25 @@ tags: [express, architecture, design]
 ---
 
 Where we left off in the [previous post in this series](https://www.andykuny.com/software/2019/03/12/transaction-script-two.html),
-our route for handling the creation of job postings had grown out of control. In this post, we'll refactor using the
-[Domain Model](https://martinfowler.com/eaaCatalog/domainModel.html) architectural pattern.
+our route for handling the creation of job postings had grown out of control.
+In this post, we'll refactor using the [Domain Model](https://martinfowler.com/eaaCatalog/domainModel.html)
+architectural pattern.
 
 ## Domain Model at a Glance
-Here's Martin Fowler's definition of a Domain Model:
+Here's Martin Fowler's definition of a Domain Model (emphasis mine):
 
-> At its worst business logic can be very complex. Rules and logic describe many different cases and slants of behavior, and it's this complexity that objects were designed to work with. A Domain Model creates a web of interconnected objects, where each object represents some meaningful individual, whether as large as a corporation or as small as a single line on an order form.
+> At its worst business logic can be very complex. Rules and logic describe
+> many different cases and slants of behavior, and it's this complexity that
+> objects were designed to work with. A Domain Model creates __a web of
+> interconnected objects, where each object represents some meaningful
+> individual,__ whether as large as a corporation or as small as a single
+> line on an order form.
 
-To implement a Domain Model (or anything, really) effectively, we need to step back and consider the underlying data schema of JobFair, our example application. Although the JobFair implementation uses a silly in-memory database, let's assume that in practice it would interface with a relational database structured around Users, Organizations, and Job Postings as such:
+To implement a Domain Model (or anything, really) effectively, we need to step
+back and consider the underlying data schema of JobFair, our example application.
+Although the JobFair implementation uses a silly in-memory database, let's assume
+that in practice it would interface with a relational database structured around
+Users, Organizations, and Job Postings as such:
 
 | Table        | Field         | Type                 | Notes              |
 | ------------ | ------------- | -------------------- | ------------------ |
@@ -37,9 +47,80 @@ To implement a Domain Model (or anything, really) effectively, we need to step b
 | job_posting  | user_id       | int                  | forgeign key       |
 | job_posting  | org_id        | int                  | forgeign key       |
   
-These three data entities relate to one another in the following ways:
+Note that I've omitted fields like `created_at` or `updated_at` that might be included automatically
+depending on one's RDBMS and configuration. These three data entities relate to one
+another in the following ways:
 
 1. A User __belongs to one__ Organization and __has many__ Job Postings
 2. An Organization __has many__ Users and __has many__ Job Postings
 3. A Job Posting __belongs to one__ Organization and __belongs to one__ User
 
+To create our Domain Model, we'll need objects that represent Users, Organizations,
+and Job Postings. Classes defining what state these objects will store and how they
+will behave are in the `app-domain-model/model` directory of the
+[JobFair repository](https://github.com/akuny/express-domain-logic/tree/master/app-domain-model/model).
+Here are some changes highlighting how we've moved on from Transaction Script:
+
+## Database Access
+Due to the simplicity of JobFair's Domain Model, I chose a simple, limited
+implementation of the [Active Record](https://www.martinfowler.com/eaaCatalog/activeRecord.html) pattern.
+Active Record objects know how to communicate with the database: for instance, the `Organization`
+model knows how to retrieve a specific instance of an Organization from disk by calling `read(orgId)`.
+In a more sophisticated context, I'd have implemented database access methods for
+these Active Record classes using the [Layer Supertype](https://martinfowler.com/eaaCatalog/layerSupertype.html)
+pattern instead of writing these methods for each model redundantly. In a real-world context,
+I'd use an object-relational mapper (ORM) like [Sequelize](http://docs.sequelizejs.com/).
+
+In any case, now Users, Organizations, and Job Postings are responsible for accessing the database,
+not a procedural script.
+
+## Business Logic
+These models are now responsible for validating themselves and for checking whether or not their instances
+conform to certain business rules. An Organization is responsible for determining whether it has
+any featured posts remaining, for example:
+
+```javascript
+class Organization {
+  /// ...
+  hasFeatured() {
+    if (this.featuredRemaining > 0 && this.tier === 'gold') {
+      return true;
+    }
+    return false;
+  }
+}
+```
+
+As with database access, this logic is not longer the concern of a procedural script.
+
+## API
+After refactoring to a Domain Model, here's the `POST /job-posting` endpoint:
+
+```javascript
+app.post('/job-posting', (req, res) => {
+  const jobPosting = new JobPosting(req.body.jobPosting);
+  jobPosting.create((err, savedJobPosting) => {
+    if (err) {
+      return res.status(501).send({
+        error: 'There was an error saving the job posting',
+        message: err
+      });
+    }
+    return res.status(201).send(savedJobPosting);
+  });
+});
+```
+
+Even with logical checks against whether or not a Job Posting may or may not be featured,
+our API is substantially cleaner than it was before.
+
+## Gaps and Potential Next Steps
+
+There's no shortage of issues with this implementation of a Domain Model for JobFair:
+
+1. `JobPosting` instantiation is hard-coded into the `POST /job-posting` endpoint. What if another interface with the application needed to create a `JobPosting`?
+2. The belongs-to-one and has-many relationships described above are not enforced. Using a robust ORM would help.
+3. `JobPosting` knowing when to decrement its `Organization`'s number of featured posts remaining may be dangerous.
+4. I'm taking for granted that these fusty OOP concepts have some bearing on an Express application; others may disgree violently.
+
+Close
