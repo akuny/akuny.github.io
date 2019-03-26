@@ -415,7 +415,7 @@ table {
   color: #000;
   background: #fff;
   border-collapse: separate;
-  font-size: 16px;
+  font-size: 15px;
 }
 
 caption {
@@ -427,12 +427,12 @@ caption {
 }
 
 th {
-  text-align: center;
+  text-align: left;
   padding: 5px;
 }
 
 td {
-  text-align: center;
+  text-align: left;
   padding: 3px 5px;
 }
 .odd td {
@@ -469,6 +469,11 @@ img {
 
 p > a > img {
   max-width: 100%;
+}
+
+ol {
+  font-size: 19px;
+  margin-left: 30px;
 }
 /*----------------------------------------------------------------------------
   Follow Box

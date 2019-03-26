@@ -47,9 +47,10 @@ Users, Organizations, and Job Postings as such:
 | job_posting  | user_id       | int                  | forgeign key       |
 | job_posting  | org_id        | int                  | forgeign key       |
   
-Note that I've omitted fields like `created_at` or `updated_at` that might be included automatically
-depending on one's RDBMS and configuration. These three data entities relate to one
-another in the following ways:
+(Note that I've omitted fields like `created_at` or `updated_at` that might be included automatically
+depending on one's RDBMS and configuration.)
+
+These three data entities relate to one another in the following ways:
 
 1. A User __belongs to one__ Organization and __has many__ Job Postings
 2. An Organization __has many__ Users and __has many__ Job Postings
@@ -72,12 +73,12 @@ pattern instead of writing these methods for each model redundantly. In a real-w
 I'd use an object-relational mapper (ORM) like [Sequelize](http://docs.sequelizejs.com/).
 
 In any case, now Users, Organizations, and Job Postings are responsible for accessing the database,
-not a procedural script.
+not a script.
 
 ## Business Logic
 These models are now responsible for validating themselves and for checking whether or not their instances
-conform to certain business rules. An Organization is responsible for determining whether it has
-any featured posts remaining, for example:
+conform to certain business rules. For example, an Organization is responsible for determining whether it has
+any featured posts remaining:
 
 ```javascript
 class Organization {
@@ -91,9 +92,11 @@ class Organization {
 }
 ```
 
-As with database access, this logic is not longer the concern of a procedural script.
+As with database access, this logic is not longer the concern of a script. If we needed to incorporate
+business logic concerning a "silver" or a "platinum" tier, we'd be able to do so in the `Organization` class and not
+in a disparate group of scripts.
 
-## API
+## Tidy Route
 After refactoring to a Domain Model, here's the `POST /job-posting` endpoint:
 
 ```javascript
@@ -111,16 +114,17 @@ app.post('/job-posting', (req, res) => {
 });
 ```
 
-Even with logical checks against whether or not a Job Posting may or may not be featured,
-our API is substantially cleaner than it was before.
+Even with logical checks against whether or not a Job Posting may or may not be featured
+having been incorporated into the application, our route is cleaner than it was before:
+create a new job posting and send it back to me.
 
 ## Gaps and Potential Next Steps
 
 There's no shortage of issues with this implementation of a Domain Model for JobFair:
 
-1. `JobPosting` instantiation is hard-coded into the `POST /job-posting` endpoint. What if another interface with the application needed to create a `JobPosting`?
+1. `JobPosting` instantiation is hard-coded into the `POST /job-posting` endpoint. What if another interface with the application needed to create a `JobPosting`? Include a service layer would reduce redundancy.
 2. The belongs-to-one and has-many relationships described above are not enforced. Using a robust ORM would help.
 3. `JobPosting` knowing when to decrement its `Organization`'s number of featured posts remaining may be dangerous.
-4. I'm taking for granted that these fusty OOP concepts have some bearing on an Express application; others may disgree violently.
+4. I'm taking for granted that these fusty OOP concepts have some bearing on an Express application; others may disgree strongly.
 
-Close
+CLOSE
