@@ -62,7 +62,7 @@ Here are some changes highlighting how we've moved on from Transaction Script:
 
 [^2]: Were I a bit more courageous, I could include old-fashioned UML class and sequence diagrams here.
 
-## Database Access
+## Less Arbitrary Database Access
 Due to the simplicity of JobFair's Domain Model, I chose a simple, limited
 implementation of the [Active Record](https://www.martinfowler.com/eaaCatalog/activeRecord.html) pattern.
 Active Record objects know how to communicate with the database: for instance, the `Organization`
@@ -75,7 +75,7 @@ I'd use an object-relational mapper (ORM) like [Sequelize](http://docs.sequelize
 In any case, now Users, Organizations, and Job Postings are responsible for accessing the database,
 not a script.
 
-## Business Logic
+## Isolated Business Logic
 These models are now responsible for validating themselves and for checking whether or not their instances
 conform to certain business rules. For example, an Organization is responsible for determining whether it has
 any featured posts remaining:
