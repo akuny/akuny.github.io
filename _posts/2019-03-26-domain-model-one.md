@@ -2,16 +2,15 @@
 layout: post
 title: 'Domain Logic in Express: Part 3'
 date: 2019-03-26 20:07:02 +0530
-comments: false
-excerpt: 'Toward a Somewhat Coherent Domain Model'
+comments: false 
+excerpt: 'Toward a somewhat coherent Domain Model'
 category: software
 tags: [express, architecture, design]
 ---
 
 Where we left off in the [previous post in this series](https://www.andykuny.com/software/2019/03/12/transaction-script-two.html),
 our route for handling the creation of job postings had grown out of control.
-In this post, we'll refactor using the [Domain Model](https://martinfowler.com/eaaCatalog/domainModel.html)
-architectural pattern.
+In this post, we'll refactor using the [Domain Model](https://martinfowler.com/eaaCatalog/domainModel.html) architectural pattern.
 
 ## Domain Model at a Glance
 Here's Martin Fowler's definition of a Domain Model (emphasis mine):
@@ -27,7 +26,7 @@ To implement a Domain Model (or anything, really) effectively, we need to step
 back and consider the underlying data schema of JobFair, our example application.
 Although the JobFair implementation uses a silly in-memory database, let's assume
 that in practice it would interface with a relational database structured around
-Users, Organizations, and Job Postings as such:
+Users, Organizations, and Job Postings as such:[^1]
 
 | Table        | Field         | Type                 | Notes              |
 | ------------ | ------------- | -------------------- | ------------------ |
@@ -47,8 +46,7 @@ Users, Organizations, and Job Postings as such:
 | job_posting  | user_id       | int                  | forgeign key       |
 | job_posting  | org_id        | int                  | forgeign key       |
   
-(Note that I've omitted fields like `created_at` or `updated_at` that might be included automatically
-depending on one's RDBMS and configuration.)
+[^1]: I've omitted fields like `created_at` or `updated_at` that might be included automatically depending on one's RDBMS and configuration.
 
 These three data entities relate to one another in the following ways:
 
@@ -57,10 +55,12 @@ These three data entities relate to one another in the following ways:
 3. A Job Posting __belongs to one__ Organization and __belongs to one__ User
 
 To create our Domain Model, we'll need objects that represent Users, Organizations,
-and Job Postings. Classes defining what state these objects will store and how they
+and Job Postings.[^2] Classes defining what state these objects will store and how they
 will behave are in the `app-domain-model/model` directory of the
 [JobFair repository](https://github.com/akuny/express-domain-logic/tree/master/app-domain-model/model).
 Here are some changes highlighting how we've moved on from Transaction Script:
+
+[^2]: Were I a bit more courageous, I could include old-fashioned UML class and sequence diagrams here.
 
 ## Database Access
 Due to the simplicity of JobFair's Domain Model, I chose a simple, limited
@@ -92,11 +92,11 @@ class Organization {
 }
 ```
 
-As with database access, this logic is not longer the concern of a script. If we needed to incorporate
+As with database access, this logic is no longer the concern of a script. If we needed to incorporate
 business logic concerning a "silver" or a "platinum" tier, we'd be able to do so in the `Organization` class and not
 in a disparate group of scripts.
 
-## Tidy Route
+## Tidier Route
 After refactoring to a Domain Model, here's the `POST /job-posting` endpoint:
 
 ```javascript
@@ -118,13 +118,17 @@ Even with logical checks against whether or not a Job Posting may or may not be 
 having been incorporated into the application, our route is cleaner than it was before:
 create a new job posting and send it back to me.
 
-## Gaps and Potential Next Steps
+## Potential Improvements
 
 There's no shortage of issues with this implementation of a Domain Model for JobFair:
 
-1. `JobPosting` instantiation is hard-coded into the `POST /job-posting` endpoint. What if another interface with the application needed to create a `JobPosting`? Include a service layer would reduce redundancy.
-2. The belongs-to-one and has-many relationships described above are not enforced. Using a robust ORM would help.
-3. `JobPosting` knowing when to decrement its `Organization`'s number of featured posts remaining may be dangerous.
-4. I'm taking for granted that these fusty OOP concepts have some bearing on an Express application; others may disgree strongly.
+1. `JobPosting` instantiation is hard-coded into the `POST /job-posting` endpoint. What if another interface with the application needed to create a `JobPosting`? Including a service layer would mitigate the risk of redundancy were a requirement like this to crop up.
+2. The belongs-to-one and has-many relationships described above are not enforced. Using a robust ORM in a non-academic setting is a must.
+3. The fact that `JobPosting` knows when to decrement its `Organization`'s number of featured posts remaining may be not-so-good.
+4. I'm taking for granted that these fusty OOP concepts have some bearing on an Express application; others may disagree strongly.
 
-CLOSE
+Despite these shortcomings, I think JobFair is in better shape than it was before. The straightforward nature of Transaction
+Script remains appealing for many uses cases, but if there's any risk of complicated domain logic down the road, working
+with a Domain Model from the ground up might not be a bad idea.
+
+***
