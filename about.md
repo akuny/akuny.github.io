@@ -7,7 +7,7 @@ title: about
 
 ![bubble, bubble](/assets/images/cauldron.jpg)
 
-I'm a writer and software tinkerer based in the greater DC area. Stay in touch: [hi@andykuny.com](mailto:hi@andykuny.com)
+I'm a writer and software developer based in the greater DC area. Stay in touch: [hi@andykuny.com](mailto:hi@andykuny.com)
 
 ## colophon
 
