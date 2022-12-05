@@ -13,6 +13,11 @@ header {
     max-width: 640px;
 }
 
+img {
+    max-width: 100%;
+    height: auto;
+}
+
 a {
     color: #1abc9c;
 }
@@ -28,11 +33,11 @@ td, th {
 }
 
 th {
-  padding-top: 12px;
-  padding-bottom: 12px;
-  text-align: left;
-  background-color: #1abc9c;
-  color: white;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #1abc9c;
+    color: white;
 }
 
 .content {
@@ -48,20 +53,37 @@ th {
     justify-content: space-between;
 }
 
-.navbar-item {
+.nav-link {
+    background-color: #1abc9c;
+    border-radius: 0.3em;
+    color: white;
+    height: 100%;
+    width: 100%;
+    padding: 6px;
+    text-decoration: none
 }
 
 .nav-menu > ul {
-  display: inline-block;
-  text-align: center;
-  background-color: #fff;
-  text-align: right;
+    display: inline-block;
+    text-align: center;
+    background-color: #fff;
+    text-align: right;
 }
 
 .nav-menu > li {
     display: inline;
     margin-left: 6px;
     margin-right: 6px;
+}
+
+.home-link {
+    color: #111111;
+    text-decoration: none;
+}
+
+.home-link:hover {
+    color: #111111;
+    text-decoration: underline;
 }
 
 .post-date {}

@@ -2,18 +2,16 @@
   <header>
     <div class="navbar">
       <div class="navbar-item" style="margin: 16px 0">
-        <span>&copy; {{ site.name }}</span>
+        <a class="home-link" href="{{ site.url }}">&copy; {{ site.name }}</a>
       </div>
       <div class="navbar-item">
         <ul class="nav-menu">
-          <li><a href="{{ site.url }}">Home</a></li>
-          <li><a href="{{ site.url }}/about">About</a></li>
-          {% if site.owner.github %}
           <li>
-            <a href="{{ site.owner.github }}" target="_blank">GitHub</a>
+            <a class="nav-link" href="{{ site.url }}/about">About</a>
           </li>
-          {% endif %}
-          <li><a href="{{ site.url }}/feed.xml">RSS</a></li>
+          <li>
+            <a class="nav-link" href="{{ site.url }}/feed.xml">RSS</a>
+          </li>
         </ul>
       </div>
     </div>
